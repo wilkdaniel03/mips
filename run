@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+verilator --sc rtl/main.sv --top-module main --build
+cd build && make -j 8 && ./vmain

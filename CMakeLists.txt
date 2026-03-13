@@ -4,7 +4,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(verilator)
 
 add_executable(vmain main.cpp)
-verilate(vmain SOURCES main.sv VERILATOR_ARGS --sc)
+verilate(vmain SOURCES rtl/main.sv VERILATOR_ARGS --sc)
 target_include_directories(vmain PRIVATE include)
 target_link_libraries(vmain PRIVATE systemc)
 
