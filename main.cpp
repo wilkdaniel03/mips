@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <memory>
+#include <iomanip>
 
 #include <verilated.h>
 #include <verilated_sc.h>
@@ -22,8 +23,11 @@ int32_t sc_main(int32_t argc, char **argv) {
 	a.write(15);
 	b.write(33);
 
-	sc_start(1,SC_US);
-	std::cout << "a: " << a.read() << ",b: " << b.read() << ",y: " << y.read() << std::endl;
+	for(uint8_t i = 0; i < 4; i++) {
+		sc_start(1,SC_US);
+		// std::cout << "a: " << a.read() << ",b: " << b.read() << ",y: " << y.read() << std::endl;
+		std::cout << "Result: " << std::hex << y.read() << std::endl;
+	}
 
 	return EXIT_SUCCESS;
 }
