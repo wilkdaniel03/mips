@@ -27,11 +27,11 @@ module main
 	wire[31:0] reg_a;
 	wire[31:0] reg_b;
 	reg is_jump;
-	registers regs(clk,instruction,is_jump,reg_a,reg_b);
+	reg oper;
+	registers regs(clk,instruction,is_jump,oper,reg_a,reg_b);
 
-	alu_oper_t oper = SUB;
 	reg[31:0] alu_result;
-	alu alu_unit(a,b,clk,oper,alu_result);
+	alu alu_unit(reg_a,reg_b,clk,oper,alu_result);
 
 	assign y = alu_result;
 

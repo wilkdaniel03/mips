@@ -1,8 +1,14 @@
+`ifndef DEFS_INC
+`include "rtl/defs.sv"
+`define DEFS_INC 1
+`endif
+
 module registers
 	(
 		input wire clk,
 		input wire[31:0] instruction,
 		output wire is_jump,
+		output wire oper,
 		output reg[31:0] y_a,y_b
 	);
 
@@ -21,6 +27,7 @@ module registers
 	reg[31:0] regs[0:31];
 	state_t current_state = FETCH;
 	reg[4:0] dest;
+	reg alu_operation;
 
 	integer i;
 	initial begin
@@ -30,6 +37,7 @@ module registers
 	end
 
 	always_ff @(posedge clk) begin
+		$display("current state: %d",current_state);
 		case(current_state)
 			FETCH: begin
 				case(instruction[OPCODE_MSB:OPCODE_LSB])
@@ -43,6 +51,8 @@ module registers
 					end
 					default: begin end
 				endcase
+				if(instruction[OPCODE_MSB:OPCODE_LSB] == SUB) alu_operation <= defs::SUB;
+				else alu_operation <= defs::ADD;
 				dest <= instruction[RS_MSB:RS_LSB];
 				current_state <= DECODE;
 			end
