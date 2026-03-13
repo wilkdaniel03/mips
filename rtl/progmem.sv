@@ -9,10 +9,10 @@ module progmem
 	reg[31:0] current;
 
 	initial begin
-		prog[0] = {6'b000010,{10{1'b0}},16'd1};
+		prog[0] = {6'b000011,{10{1'b0}},16'd2};
 		prog[1] = 5;
-		prog[2] = {{16{1'b0}},16'd1};
-		prog[3] = {6'b000101,5'b00000,5'b00001,{16{1'b0}}};
+		prog[2] = {6'b000001,{10{1'b0}},16'd1};
+		prog[3] = {6'b000110,5'b00000,5'b00001,{16{1'b0}}};
 	end
 
 	always_ff @(posedge clk) begin

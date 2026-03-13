@@ -22,10 +22,10 @@ module registers
 	localparam IMM_LSB = 0;
 
 	typedef enum reg[2:0] { FETCH, DECODE, EXEC, MEM, SAVE } state_t;
-	typedef enum logic[5:0] { MOVLW, MOVF, JMP, LD, ST, ADD, SUB } instr_t;
+	typedef enum logic[5:0] { NOP, MOVLW, MOVF, JMP, LD, ST, ADD, SUB } instr_t;
 
 	reg[31:0] regs[0:31];
-	state_t current_state = FETCH;
+	state_t current_state = DECODE;
 	reg[4:0] dest;
 	reg alu_operation;
 
@@ -39,7 +39,8 @@ module registers
 	always_ff @(posedge clk) begin
 		$display("current state: %d",current_state);
 		case(current_state)
-			FETCH: begin
+			FETCH: current_state <= DECODE;
+			DECODE: begin
 				case(instruction[OPCODE_MSB:OPCODE_LSB])
 					ADD,SUB: begin
 						y_a <= regs[instruction[RS_MSB:RS_LSB]];
@@ -54,9 +55,8 @@ module registers
 				if(instruction[OPCODE_MSB:OPCODE_LSB] == SUB) alu_operation <= defs::SUB;
 				else alu_operation <= defs::ADD;
 				dest <= instruction[RS_MSB:RS_LSB];
-				current_state <= DECODE;
+				current_state <= EXEC;
 			end
-			DECODE: current_state <= EXEC;
 			EXEC: current_state <= MEM;
 			MEM: current_state <= SAVE;
 			SAVE: current_state <= FETCH;
