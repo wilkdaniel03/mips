@@ -20,3 +20,12 @@ cd build
 make
 ./vmain
 ```
+
+### Opcodes(6bit)
+* 000000: movlw
+* 000001: movf
+* 000010: jmp
+* 000011: ld
+* 000100: st
+* 000101: add 
+* 000110: sub
