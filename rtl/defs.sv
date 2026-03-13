@@ -1,5 +1,5 @@
 package defs;
 
-	typedef enum logic { ADD, SUB } alu_oper_t;
+	typedef enum logic[1:0] { ADD, SUB, MUL, DIV } alu_oper_t;
 
 endpackage

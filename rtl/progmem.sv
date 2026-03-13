@@ -1,11 +1,11 @@
 module progmem
 	(
 		input wire clk,
-		input wire[1:0] addr,
+		input wire[7:0] addr,
 		output wire[31:0] data
 	);
 
-	reg[31:0] prog[0:3];
+	reg[31:0] prog[0:255];
 	reg[31:0] current;
 
 	initial begin

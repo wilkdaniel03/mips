@@ -8,7 +8,7 @@ module registers
 		input wire clk,
 		input wire[31:0] instruction,
 		output wire is_jump,
-		output wire oper,
+		output wire[1:0] oper,
 		output reg[31:0] y_a,y_b
 	);
 
@@ -22,12 +22,12 @@ module registers
 	localparam IMM_LSB = 0;
 
 	typedef enum reg[2:0] { FETCH, DECODE, EXEC, MEM, SAVE } state_t;
-	typedef enum logic[5:0] { NOP, MOVLW, MOVF, JMP, LD, ST, ADD, SUB } instr_t;
+	typedef enum logic[5:0] { NOP, MOVLW, MOVF, JMP, LD, ST, ADD, SUB, MUL, DIV } instr_t;
 
 	reg[31:0] regs[0:31];
-	state_t current_state = DECODE;
+	state_t current_state = FETCH;
 	reg[4:0] dest;
-	reg alu_operation;
+	reg[1:0] alu_operation;
 
 	integer i;
 	initial begin
@@ -53,6 +53,8 @@ module registers
 					default: begin end
 				endcase
 				if(instruction[OPCODE_MSB:OPCODE_LSB] == SUB) alu_operation <= defs::SUB;
+				else if(instruction[OPCODE_MSB:OPCODE_LSB] == MUL) alu_operation <= defs::MUL;
+				else if(instruction[OPCODE_MSB:OPCODE_LSB] == DIV) alu_operation <= defs::DIV;
 				else alu_operation <= defs::ADD;
 				dest <= instruction[RS_MSB:RS_LSB];
 				current_state <= EXEC;

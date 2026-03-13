@@ -17,9 +17,9 @@ module main
 
 	import defs::*;
 
-	reg[1:0] addr;
+	reg[7:0] addr;
 	reg ic_rco;
-	counter #(2) ic(clk,addr,ic_rco);
+	counter #(8) ic(clk,addr,ic_rco);
 
 	reg[31:0] instruction;
 	progmem prog(clk,addr,instruction);
@@ -27,7 +27,7 @@ module main
 	wire[31:0] reg_a;
 	wire[31:0] reg_b;
 	reg is_jump;
-	reg oper;
+	reg[1:0] oper;
 	registers regs(clk,instruction,is_jump,oper,reg_a,reg_b);
 
 	reg[31:0] alu_result;
