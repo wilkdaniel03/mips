@@ -1,6 +1,12 @@
+`ifndef DEFS_INC
+`include "rtl/defs.sv"
+`define DEFS_INC 1
+`endif
+
 `include "rtl/counter.sv"
 `include "rtl/progmem.sv"
 `include "rtl/registers.sv"
+`include "rtl/alu.sv"
 
 module main
 	(
@@ -8,6 +14,8 @@ module main
 		input wire clk,
 		output wire[31:0] y
 	);
+
+	import defs::*;
 
 	reg[1:0] addr;
 	reg ic_rco;
@@ -18,12 +26,13 @@ module main
 
 	wire[31:0] reg_a;
 	wire[31:0] reg_b;
-	registers regs(clk,instruction,reg_a,reg_b);
+	reg is_jump;
+	registers regs(clk,instruction,is_jump,reg_a,reg_b);
 
-	assign y = instruction;
+	alu_oper_t oper = SUB;
+	reg[31:0] alu_result;
+	alu alu_unit(a,b,clk,oper,alu_result);
 
-	always begin
-		$display("alu_a: %x, alu_b: %x",reg_a,reg_b);
-	end
+	assign y = alu_result;
 
 endmodule

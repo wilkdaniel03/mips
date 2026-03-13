@@ -20,6 +20,7 @@ module registers
 
 	reg[31:0] regs[0:31];
 	state_t current_state = FETCH;
+	reg[4:0] dest;
 
 	integer i;
 	initial begin
@@ -38,11 +39,17 @@ module registers
 					end
 					MOVLW: begin
 						y_a <= regs[instruction[RT_MSB:RT_LSB]];
-						y_b <= regs[instruction[IMM_MSB:IMM_LSB]];
+						y_b <= {{16{1'b0}},instruction[IMM_MSB:IMM_LSB]};
 					end
 					default: begin end
 				endcase
+				dest <= instruction[RS_MSB:RS_LSB];
+				current_state <= DECODE;
 			end
+			DECODE: current_state <= EXEC;
+			EXEC: current_state <= MEM;
+			MEM: current_state <= SAVE;
+			SAVE: current_state <= FETCH;
 			default: begin end
 		endcase
 	end
