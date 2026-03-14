@@ -6,6 +6,7 @@
 module registers
 	(
 		input wire clk,
+		input wire[7:0] next_addr,
 		input wire[31:0] instruction,
 		input wire[31:0] din,
 		output reg is_jump,
@@ -41,13 +42,16 @@ module registers
 
 	always_ff @(posedge clk) begin
 		case(current_state)
-			FETCH: current_state <= DECODE;
+			FETCH: begin 
+				current_state <= DECODE;
+			end
 			DECODE: begin
 				current_instr = instruction[OPCODE_MSB:OPCODE_LSB];
 				case(current_instr)
 					ADD,SUB,MUL,DIV: begin
 						y_a <= regs[instruction[RS_MSB:RS_LSB]];
 						y_b <= regs[instruction[RT_MSB:RT_LSB]];
+						is_jump <= 1'b0;
 					end
 					MOVLW: begin
 						y_a <= regs[instruction[RT_MSB:RT_LSB]];
@@ -57,6 +61,12 @@ module registers
 					MOVF: begin
 						y_a <= regs[instruction[RT_MSB:RT_LSB]];
 						y_b <= 0;
+						is_jump <= 1'b0;
+					end
+					JMP: begin
+						y_a <= {{24{1'b0}},next_addr};
+						y_b <= {{16{1'b0}},instruction[IMM_MSB:IMM_LSB]};
+						is_jump <= 1'b1;
 					end
 					default: begin end
 				endcase
@@ -74,19 +84,23 @@ module registers
 				case(current_instr)
 					MOVLW: begin
 						regs[dest] <= instruction;
+						is_jump <= 1'b0;
 						$display("R%d <- %d",dest,instruction);
 					end
 					MOVF: begin
 						regs[dest] <= regs[src];
+						is_jump <= 1'b0;
 						$display("R%d <- %d",dest,regs[src]);
 					end
+					JMP: begin end
 					default: begin
 						regs[dest] <= din;
+						is_jump <= 1'b0;
 						$display("R%d <- %d",dest,din);
 					end
 				endcase
 				current_state <= FETCH;
-				is_jump <= 1'b0;
+				// is_jump <= 1'b0;
 			end
 			default: begin end
 		endcase

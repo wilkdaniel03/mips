@@ -34,7 +34,7 @@ module main
 	wire[31:0] reg_b;
 	reg is_jump;
 	wire[1:0] oper;
-	registers regs(clk,instruction,alu_result,is_jump,oper,reg_a,reg_b);
+	registers regs(clk,next_addr,instruction,alu_result,is_jump,oper,reg_a,reg_b);
 
 	reg[31:0] alu_result;
 	alu alu_unit(reg_a,reg_b,clk,oper,alu_result);
