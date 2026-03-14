@@ -45,7 +45,7 @@ module registers
 			DECODE: begin
 				current_instr = instruction[OPCODE_MSB:OPCODE_LSB];
 				case(current_instr)
-					ADD,SUB: begin
+					ADD,SUB,MUL,DIV: begin
 						y_a <= regs[instruction[RS_MSB:RS_LSB]];
 						y_b <= regs[instruction[RT_MSB:RT_LSB]];
 					end
@@ -56,9 +56,9 @@ module registers
 					end
 					default: begin end
 				endcase
-				if(instruction[OPCODE_MSB:OPCODE_LSB] == SUB) alu_operation <= defs::SUB;
-				else if(instruction[OPCODE_MSB:OPCODE_LSB] == MUL) alu_operation <= defs::MUL;
-				else if(instruction[OPCODE_MSB:OPCODE_LSB] == DIV) alu_operation <= defs::DIV;
+				if(current_instr == SUB) alu_operation <= defs::SUB;
+				else if(current_instr == MUL) alu_operation <= defs::MUL;
+				else if(current_instr == DIV) alu_operation <= defs::DIV;
 				else alu_operation <= defs::ADD;
 				dest <= instruction[RS_MSB:RS_LSB];
 				current_state <= EXEC;
@@ -66,15 +66,24 @@ module registers
 			EXEC: current_state <= MEM;
 			MEM: current_state <= SAVE;
 			SAVE: begin
-				if(current_instr == MOVLW) begin 
-					regs[dest] <= din;
-					$display("R%d <- %d",dest,din);
-				end
+				case(current_instr)
+					MOVLW: begin
+						regs[dest] <= instruction;
+						$display("R%d <- %d",dest,instruction);
+					end
+					ADD,SUB,MUL,DIV: begin
+						regs[dest] <= din;
+						$display("R%d <- %d",dest,din);
+					end
+					default: begin end
+				endcase
 				current_state <= FETCH;
 				is_jump <= 1'b0;
 			end
 			default: begin end
 		endcase
 	end
+
+	assign oper = alu_operation;
 
 endmodule

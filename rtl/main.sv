@@ -32,12 +32,9 @@ module main
 
 	wire[31:0] reg_a;
 	wire[31:0] reg_b;
-	wire[31:0] reg_din;
 	reg is_jump;
-	reg[1:0] oper;
-	registers regs(clk,instruction,reg_din,is_jump,oper,reg_a,reg_b);
-
-	assign reg_din = instruction;
+	wire[1:0] oper;
+	registers regs(clk,instruction,alu_result,is_jump,oper,reg_a,reg_b);
 
 	reg[31:0] alu_result;
 	alu alu_unit(reg_a,reg_b,clk,oper,alu_result);
