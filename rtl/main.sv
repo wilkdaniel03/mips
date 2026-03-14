@@ -18,8 +18,18 @@ module main
 	import defs::*;
 
 	reg[7:0] addr;
-	reg ic_rco;
-	counter #(8) ic(clk,addr,ic_rco);
+	reg[7:0] next_addr = 0;
+	reg[2:0] state;
+	reg state_rco;
+	counter #(3,5) state_counter(clk,state,state_rco);
+
+	always @(posedge clk) begin
+		if(state == 3'b001) next_addr = addr + 1;
+	end
+
+	always_comb begin
+		addr = next_addr;
+	end
 
 	reg[31:0] instruction;
 	progmem prog(clk,addr,instruction);

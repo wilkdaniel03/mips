@@ -15,18 +15,24 @@ module alu
 
 	reg[31:0] addition;
 	reg[31:0] subtraction;
+	reg[31:0] multiplication;
+	reg[31:0] division;
 
 	reg[31:0] result;
 
 	always_comb begin
 		addition = a + b;
 		subtraction = a - b;
+		multiplication = a * b;
+		division = a / b;
 	end
 
 	always_ff @(posedge clk) begin
 		case(operation)
 			ADD: result = addition;
 			SUB: result = subtraction;
+			MUL: result = multiplication;
+			DIV: result = division;
 			default: begin end
 		endcase
 	end

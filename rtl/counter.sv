@@ -10,7 +10,7 @@ module counter
 	);
 
 	reg[WIDTH-1:0] current = 0;
-	reg current_rco = 0;
+	reg current_rco = 1'b1;
 
 	always_ff @(posedge clk) begin
 		if(current < MOD-1) begin
