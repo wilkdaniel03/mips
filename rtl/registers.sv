@@ -7,7 +7,8 @@ module registers
 	(
 		input wire clk,
 		input wire[31:0] instruction,
-		output wire is_jump,
+		input wire[31:0] din,
+		output reg is_jump,
 		output wire[1:0] oper,
 		output reg[31:0] y_a,y_b
 	);
@@ -26,6 +27,7 @@ module registers
 
 	reg[31:0] regs[0:31];
 	state_t current_state = FETCH;
+	reg[5:0] current_instr;
 	reg[4:0] dest;
 	reg[1:0] alu_operation;
 
@@ -41,7 +43,8 @@ module registers
 		case(current_state)
 			FETCH: current_state <= DECODE;
 			DECODE: begin
-				case(instruction[OPCODE_MSB:OPCODE_LSB])
+				current_instr = instruction[OPCODE_MSB:OPCODE_LSB];
+				case(current_instr)
 					ADD,SUB: begin
 						y_a <= regs[instruction[RS_MSB:RS_LSB]];
 						y_b <= regs[instruction[RT_MSB:RT_LSB]];
@@ -49,6 +52,7 @@ module registers
 					MOVLW: begin
 						y_a <= regs[instruction[RT_MSB:RT_LSB]];
 						y_b <= {{16{1'b0}},instruction[IMM_MSB:IMM_LSB]};
+						is_jump <= 1'b1;
 					end
 					default: begin end
 				endcase
@@ -61,7 +65,14 @@ module registers
 			end
 			EXEC: current_state <= MEM;
 			MEM: current_state <= SAVE;
-			SAVE: current_state <= FETCH;
+			SAVE: begin
+				if(current_instr == MOVLW) begin 
+					regs[dest] <= din;
+					$display("R%d <- %d",dest,din);
+				end
+				current_state <= FETCH;
+				is_jump <= 1'b0;
+			end
 			default: begin end
 		endcase
 	end
