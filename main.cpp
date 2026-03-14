@@ -25,7 +25,7 @@ int32_t sc_main(int32_t argc, char **argv) {
 
 	for(uint8_t i = 0; i < 30; i++) {
 		sc_start(1,SC_US);
-		std::cout << "a: " << a.read() << ",b: " << b.read() << ",y: " << y.read() << std::endl;
+		// std::cout << "a: " << a.read() << ",b: " << b.read() << ",y: " << y.read() << std::endl;
 		// std::cout << "Result: " << std::hex << y.read() << std::endl;
 	}
 

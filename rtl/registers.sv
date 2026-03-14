@@ -29,6 +29,7 @@ module registers
 	state_t current_state = FETCH;
 	reg[5:0] current_instr;
 	reg[4:0] dest;
+	reg[4:0] src;
 	reg[1:0] alu_operation;
 
 	integer i;
@@ -39,7 +40,6 @@ module registers
 	end
 
 	always_ff @(posedge clk) begin
-		$display("current state: %d",current_state);
 		case(current_state)
 			FETCH: current_state <= DECODE;
 			DECODE: begin
@@ -54,6 +54,10 @@ module registers
 						y_b <= {{16{1'b0}},instruction[IMM_MSB:IMM_LSB]};
 						is_jump <= 1'b1;
 					end
+					MOVF: begin
+						y_a <= regs[instruction[RT_MSB:RT_LSB]];
+						y_b <= 0;
+					end
 					default: begin end
 				endcase
 				if(current_instr == SUB) alu_operation <= defs::SUB;
@@ -61,6 +65,7 @@ module registers
 				else if(current_instr == DIV) alu_operation <= defs::DIV;
 				else alu_operation <= defs::ADD;
 				dest <= instruction[RS_MSB:RS_LSB];
+				src <= instruction[RT_MSB:RT_LSB];
 				current_state <= EXEC;
 			end
 			EXEC: current_state <= MEM;
@@ -71,11 +76,14 @@ module registers
 						regs[dest] <= instruction;
 						$display("R%d <- %d",dest,instruction);
 					end
-					ADD,SUB,MUL,DIV: begin
+					MOVF: begin
+						regs[dest] <= regs[src];
+						$display("R%d <- %d",dest,regs[src]);
+					end
+					default: begin
 						regs[dest] <= din;
 						$display("R%d <- %d",dest,din);
 					end
-					default: begin end
 				endcase
 				current_state <= FETCH;
 				is_jump <= 1'b0;

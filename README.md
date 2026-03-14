@@ -23,7 +23,7 @@ make
 
 ### Opcodes(6bit)
 * 000001: movlw ✅
-* 000010: movf ❌
+* 000010: movf ✅
 * 000011: jmp ❌
 * 000100: ld ❌
 * 000101: st ❌
