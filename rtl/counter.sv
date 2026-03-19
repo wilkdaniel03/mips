@@ -5,6 +5,7 @@ module counter
 	)
 	(
 		input wire clk,
+		input wire en = 1'b1,
 		output wire[WIDTH-1:0] cout,
 		output wire rco
 	);
