@@ -21,7 +21,7 @@ module main
 	reg[7:0] next_addr = 0;
 	reg[2:0] state;
 	reg state_rco;
-	counter #(3,5) state_counter(clk,state,state_rco);
+	counter #(3,5) state_counter(clk,1'b1,state,state_rco);
 
 	always @(posedge clk) begin
 		if(state == 3'b001) next_addr = addr + 1;

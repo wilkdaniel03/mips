@@ -8,7 +8,7 @@ module counter_tb
 	wire[3:0] cout;
 	wire rco;
 
-	counter #(4,10) uut(clk,cout,rco);
+	counter #(4,10) uut(clk,1'b1,cout,rco);
 
 	integer i;
 	initial begin
