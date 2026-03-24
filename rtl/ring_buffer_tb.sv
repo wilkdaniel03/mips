@@ -1,5 +1,5 @@
 `include "rtl/ring_buffer.sv"
-`timescale 1ns / 10ps
+`timescale 1ns / 1ps
 
 module ring_buffer_tb
 	();
@@ -10,7 +10,7 @@ module ring_buffer_tb
 	reg[1:0] addr = 0;
 	reg[7:0] din;
 	reg[7:0] dout;
-	ring_buffer #(4,8) uut(clk,wr_en,rd_en,addr,din,dout);
+	ring_buffer #(2,8) uut(clk,wr_en,rd_en,addr,din,dout);
 
 	integer i;
 	initial begin

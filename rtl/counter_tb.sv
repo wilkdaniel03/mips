@@ -1,5 +1,5 @@
-`timescale 1ns/1ps
 `include "rtl/counter.sv"
+`timescale 1ns / 1ps
 
 module counter_tb
 	();

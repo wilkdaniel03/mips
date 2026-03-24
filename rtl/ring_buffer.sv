@@ -2,6 +2,7 @@
 `define COUNTER_INC 1
 `include "rtl/counter.sv"
 `endif
+`timescale 1ns / 1ps
 
 module ring_buffer
 	#(
@@ -10,18 +11,18 @@ module ring_buffer
 	)
 	(
 		input wire clk,wr_en,rd_en,
-		input wire[DEPTH-1:0] addr,
+		input wire[WIDTH-1:0] addr,
 		input wire[DEPTH-1:0] din,
 		output wire[DEPTH-1:0] dout
 	);
 
-	parameter IDX_WIDTH = $clog2(DEPTH);
+	parameter IDX_WIDTH = $clog2(WIDTH) + 1;
 
 	reg idx_en = 0;
 	wire[IDX_WIDTH-1:0] idx_data;
 	wire idx_rco;
-	counter #(IDX_WIDTH,DEPTH) idx(clk,idx_en,idx_data,idx_rco);
-	reg[DEPTH-1:0] data[0:WIDTH-1];
+	counter #(IDX_WIDTH,WIDTH) idx(clk,idx_en,idx_data,idx_rco);
+	reg[DEPTH-1:0] data[0:2**WIDTH-1];
 
 	reg[DEPTH-1:0] dout_buf = 0;
 
