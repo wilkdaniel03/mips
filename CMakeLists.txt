@@ -17,3 +17,8 @@ add_executable(vringbuffer ring_buffer.cpp)
 verilate(vringbuffer SOURCES rtl/ring_buffer_tb.sv VERILATOR_ARGS --sc --timing)
 target_include_directories(vringbuffer PRIVATE include)
 target_link_libraries(vringbuffer PRIVATE systemc)
+
+add_executable(vcam cam.cpp)
+verilate(vcam SOURCES rtl/cam_tb.sv VERILATOR_ARGS --sc --timing)
+target_include_directories(vcam PRIVATE include)
+target_link_libraries(vcam PRIVATE systemc)

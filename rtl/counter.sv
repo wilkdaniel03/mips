@@ -3,7 +3,7 @@
 module counter
 	#(
 		parameter WIDTH,
-		parameter MOD=2**WIDTH
+		parameter MOD=2**WIDTH-1
 	)
 	(
 		input wire clk,
@@ -16,7 +16,7 @@ module counter
 	reg current_rco = 1'b1;
 
 	always_ff @(posedge clk) begin
-		if(current < MOD-1 && en == 1'b1) begin
+		if(current < WIDTH'(MOD-1) && en == 1'b1) begin
 			current <= current + 1;
 			current_rco <= 1'b0;
 		end
