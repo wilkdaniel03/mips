@@ -16,13 +16,17 @@ module counter
 	reg current_rco = 1'b1;
 
 	always_ff @(posedge clk) begin
-		if(current < MOD-1) begin
+		if(current < MOD-1 && en == 1'b1) begin
 			current <= current + 1;
 			current_rco <= 1'b0;
 		end
-		else begin
+		else if(en == 1'b1) begin
 			current <= 0;
 			current_rco <= 1'b1;
+		end
+		else begin
+			current <= current;
+			current_rco <= current_rco;
 		end
 	end
 
